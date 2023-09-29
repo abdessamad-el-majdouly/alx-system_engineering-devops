@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
-# This script is displaying "Best School" 10 times using an until loop
+# This script displays "Best School" 10 times and "Hi" on the 9th iteration
 
 # Initialize a counter
-counter=0
+counter=1
 
-# Use an until loop to display "Best School" 10 times
-until [ $counter -ge 10 ]; do
-  echo "Best School"
+# Use a while loop to display "Best School" 10 times
+while [ $counter -le 10 ]; do
+  # Check if it's the 9th iteration
+  if [ $counter -eq 9 ]; then
+    echo "Best School"
+    echo "Hi"
+  else
+    echo "Best School"
+  fi
   # Increment the counter
   ((counter++))
 done
