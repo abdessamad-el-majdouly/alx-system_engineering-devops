@@ -1,13 +1,13 @@
-# 1-install_a_package.pp
-
-# Define a package resource for Flask
-package { 'Flask':
-  ensure   => '2.1.0',  # Specify the desired version
-  provider => 'pip3',   # Use pip3 as the package provider
-  require  => Package['python3-pip'],  # Ensure pip3 is installed before Flask
+package {
+  'Flask':
+    ensure   => '2.1.0',
+    provider => 'pip3',
+    require  => Exec['apt-get update'],
 }
 
-# Ensure that python3-pip is installed
-package { 'python3-pip':
-  ensure => installed,
+exec {
+  'apt-get update':
+    command => '/usr/bin/apt-get update',
+    onlyif  => '/usr/bin/apt-get update',
+    path    => ['/usr/bin', '/bin'],
 }
