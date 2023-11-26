@@ -1,19 +1,20 @@
-#!/usr/bin/env bash
-ssh-keygen -t rsa -b 4096 -f school -N betty
-# Display a message indicating that the key pair has been created
-echo "RSA key pair successfully generated with the following properties:"
-echo "  Private key file: school"
-echo "  Public key file: school.pub"
-echo "  Key fingerprint: 5d:a8:c1:f5:98:b6:e5:c0:9b:ee:02:c4:d4:01:f3:ba"
-echo "  Key's randomart image:"
-echo "  +--[ RSA 4096]----+"
-echo "  |      oo...      |"
-echo "  |      .+.o =     |"
-echo "  |     o  + B +    |"
-echo "  |      o. = O     |"
-echo "  |     .. S = .    |"
-echo "  |      .. .       |"
-echo "  |      E.  .      |"
-echo "  |        ..       |"
-echo "  |         ..      |"
-echo "  +-----------------+""
+#!/bin/bash
+
+# Define the key file name
+private_key="school"
+public_key="${private_key}.pub"
+
+# Generate RSA key pair with 4096 bits and protect it with the passphrase "betty"
+ssh-keygen -t rsa -b 4096 -f "$private_key" -N "betty"
+
+# Display key information
+echo "Generating public/private rsa key pair."
+echo "Your identification has been saved in $private_key."
+echo "Your public key has been saved in $public_key."
+echo "The key fingerprint is:"
+ssh-keygen -lf "$private_key"
+echo "The key's randomart image is:"
+ssh-keygen -lvf "$private_key"
+
+# List the generated files
+ls -l "$private_key" "$public_key"
