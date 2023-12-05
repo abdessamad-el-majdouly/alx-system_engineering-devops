@@ -14,8 +14,8 @@ server_config=\
 frontend  besthor_frontend
         bind *:80
         mode http
-        default_backend besthor_backend
-backend besthor_backend
+        default_backend abde_backend
+backend abde_backend
         balance roundrobin
         server 365298-web-01 54.158.80.87:80 check
         server 365298-web-02 54.236.8.114:80 check
@@ -23,10 +23,7 @@ backend besthor_backend
 echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
 
 # enable haproxy to be started by init script
+
 echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
 
-# Testing the HAproxy configuration file
-sudo haproxy -c -f /etc/haproxy/haproxy.cfg
-
-# Restart the Nginx service
 sudo service haproxy restart
