@@ -2,5 +2,5 @@
 # Install Nginx and the init file have only a message
 sudo apt-get update -y
 sudo apt-get install nginx -y
-sudo service nginx start
 echo "Hello World!" | sudo tee /var/www/html/index.html
+sudo service nginx restart
