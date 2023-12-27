@@ -32,9 +32,9 @@ cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.b
 echo -e "Hello World!" > /var/www/html/index.nginx-debian.html
 
 # Setting up /redirect_me to a github 
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/abdessamad-el-majdouly permanent;"
+string_for_replacements="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/abdessamad-el-majdouly permanent;"
 
-sudo sed -i "s#server_name _;#$string_for_replacement#" /etc/nginx/sites-enabled/default
+sudo sed -i "s#server_name _;#$string_for_replacements#" /etc/nginx/sites-enabled/default
 
 
 # Setting up a 404 page
