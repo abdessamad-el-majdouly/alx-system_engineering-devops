@@ -1,31 +1,48 @@
 #!/usr/bin/env bash
-# Configuring Nginx for HTTP response's custom header (on web-01 and web-02)
-# Name of the custom HTTP header must be X-Served-By
-# Value of the custom HTTP header must be the hostname of the server Nginx is running on
-sudo apt-get update
-sudo apt-get -y install nginx
+# Configures a new ubuntu machine by installing
+# Nginx where it should be listening on port 80
+# Serve a page that would return a Hello World string
+#
+# colors
+blue='\e[1;34m'
+brown='\e[0;33m'
+green='\e[1;32m'
+reset='\033[0m'
 
-# configure firewall to allow request through port 80
+echo -e "${blue}Updating and installing ${brown}Nginx${blue}.${reset}\n"
+sudo apt-get update
+sudo apt-get install nginx -y
+
+echo -e "\n${blue}Setting up some minor stuff.${reset}\n"
+
+# starting nginx service
+sudo service nginx start
+
+# allowing nginx on firewall
 sudo ufw allow 'Nginx HTTP'
 
-sudo mkdir -p /var/www/html
+#  Backup default index
+sudo cp /var/www/html/index.nginx-debian.html /var/www/html/index.nginx-debian.html.bckp
 
-# change permissions to allow us to easily create files in this directory
-sudo chmod -R 755 /var/www
+# Creating new index
+echo "Hello World!" | sudo tee /var/www/html/index.html
 
-#  create the index page
-echo 'Hello World!' |sudo tee  /var/www/html/index.html
+# Setting up /redirect_me to a github 
+string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/github.com\/abdessamad-el-majdouly permanent;"
 
-# create a webpage for error 404
-echo "Ceci n'est pas une page" |sudo tee /var/www/html/404.html
+sudo sed -i "s#server_name _;#$string_for_replacement#" /etc/nginx/sites-enabled/default
 
-# code to configure redirect for a single page(/redirect_me) and add header to display hostname
-string_for_replacement="server_name _;\n\tadd_header X-Served-By \$hostname;\n\trewrite ^\/redirect_me https:\/\/www.mohamedkadi.com permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+# Creating a 404 page
+echo " Ceci n'est pas une page " | sudo tee /var/www/html/404.html
 
-# code to configure redirect for 404 error page
-string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var\/www\/html;\n\t\tinternal;\n\t}"
-sudo sed -i "s/listen 80 default_server;/$string_for_replacement/" /etc/nginx/sites-enabled/default
+# Setting up a 404 page 
+string_for_replacement="listen 80 default_server;\n\terror_page 404 \/404.html;\n\tlocation = \/404.html {\n\t\troot \/var/www/html;\n\tinternal;\n\t}"
 
-# restart the web server after updating the settings
+sudo sed -i "s#listen 80 default_server;#$string_for_replacement#" /etc/nginx/sites-enabled/default
+
+
+# Restarting nginx
 sudo service nginx restart
+
+echo -e "\n${green}Completed.${reset} ✅ \n"
+~                                              
