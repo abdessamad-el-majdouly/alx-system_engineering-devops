@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+sudo apt-key add signature.key
+sudo gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys B7B3B788A8D3785C
+sudo gpg --export --armor B7B3B788A8D3785C | sudo apt-key add -
+sudo apt update
+sudo sh -c 'echo "deb http://repo.mysql.com/apt/ubuntu bionic mysql-5.7" >> /etc/apt/sources.list.d/mysql.list'
+sudo apt-cache policy mysql-server
+sudo apt-get install -f mysql-client=5.7* mysql-community-server=5.7* mysql-server=5.7* -y
