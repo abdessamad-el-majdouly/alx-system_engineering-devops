@@ -38,14 +38,14 @@ frontend akoatem-frontend
         mode http
         http-request redirect scheme https code 301 unless { ssl_fc }
         http-request set-header X_Forwarded-Proto http
-        default_backend akoatem-backend
+        default_backend abdessamad-backend
 
-frontend akoatem-frontend-https
-        bind *:443 ssl crt /etc/haproxy/certs/akoatem.tech.pem
+frontend abdessamad-frontend-https
+        bind *:443 ssl crt /etc/haproxy/certs/abdessamad.tech.pem
         http-request set-header X-Forwarded-Proto https
-        default_backend akoatem-backend
+        default_backend abdessamad-backend
 
-backend akoatem-backend
+backend abdessamad-backend
         balance roundrobin
-        server 106489-web-01 34.232.68.152:80 check
-        server 106489-web-02 3.83.227.80:80 check
+        server 365298-web-01	100.26.232.111:80 check
+        server 365298-web-02	54.146.91.137:80 check
