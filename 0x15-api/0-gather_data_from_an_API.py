@@ -1,25 +1,20 @@
 #!/usr/bin/python3
-"""Returns to-do list information for a given employee ID."""
+"""
+This script gathers data from an API using urllib
+It then serializes the json data to a python dictionary and prints it out
+It takes an parameter, the user Id of the user's data that you want
+"""
+
 import requests
 import sys
 
-
 if __name__ == "__main__":
-    # API base URL
-    url = "https://jsonplaceholder.typicode.com/"
-
-    # Retrieve user information
-    user = requests.get(url + "users/{}".format(sys.argv[1])).json()
-
-    # Retrieve TODO list for the given employee ID
-    todos = requests.get(url + "todos", params={"userId": sys.argv[1]}).json()
-
-    # Extract completed tasks
-    completed = [t.get("title") for t in todos if t.get("completed") is True]
-
-    # Display output
-    print("Employee {} is done with tasks({}/{}):".format(
-        user.get("name"), len(completed), len(todos)))
-
-    # Display titles of completed tasks
-    [print("\t {}".format(c)) for c in completed]
+    todo = requests.get('https://jsonplaceholder.typicode.com/todos/',
+                        params={'userId': sys.argv[1]}).json()
+    user = requests.get('https://jsonplaceholder.typicode.com/users/{}'
+                        .format(sys.argv[1])).json()
+    completed = [task.get('title')
+                 for task in todo if task.get('completed') is True]
+    print("Employee {} is done with tasks({}/{}):"
+          .format(user.get('name'), len(completed), len(todo)))
+    [print("\t {}".format(title)) for title in completed]
