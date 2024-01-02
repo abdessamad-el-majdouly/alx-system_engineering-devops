@@ -1,35 +1,25 @@
 #!/usr/bin/python3
-"""
-    a Python script for a given employee ID, returns information
-    about his/her TODO list progress.
-"""
+"""Returns to-do list information for a given employee ID."""
 import requests
 import sys
 
+
 if __name__ == "__main__":
-    """
-    a Python script for a given employee ID, returns information
-    about his/her TODO list progress.
-    """
-    strcont = len(sys.argv) - 1
-    if strcont > 1 or strcont <= 0:
-        print("please only employeid")
-        sys.exit(1)
-    else:
-        if sys.argv[1]:
-            empcode = sys.argv[1]
-
+    # API base URL
     url = "https://jsonplaceholder.typicode.com/"
-    headers = {
-        "Content-Type": "application/json",
-        }
-    user = requests.get(url + "users/{}".format(empcode))
-    todos = requests.get(url + "todos", params={"userId": empcode})
-    user = user.json()
-    todos = todos.json()
 
-    done = [data.get("title") for data in todos
-            if data.get("completed") is True]
+    # Retrieve user information
+    user = requests.get(url + "users/{}".format(sys.argv[1])).json()
+
+    # Retrieve TODO list for the given employee ID
+    todos = requests.get(url + "todos", params={"userId": sys.argv[1]}).json()
+
+    # Extract completed tasks
+    completed = [t.get("title") for t in todos if t.get("completed") is True]
+
+    # Display output
     print("Employee {} is done with tasks({}/{}):".format(
-        user.get("name"), len(done), len(todos)))
-    [print("\t {}".format(c)) for c in done]
+        user.get("name"), len(completed), len(todos)))
+
+    # Display titles of completed tasks
+    [print("\t {}".format(c)) for c in completed]
