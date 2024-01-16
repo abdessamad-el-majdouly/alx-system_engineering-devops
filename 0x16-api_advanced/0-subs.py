@@ -1,18 +1,20 @@
 #!/usr/bin/python3
-"""
-this doc for module
-"""
-import requests
+"""A script that queries reddit Api"""
 
-headers = {"User-Agent": "MyCustomUserAgent/1.0"}
+import requests
 
 
 def number_of_subscribers(subreddit):
-    """method doc"""
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    response = requests.get(url, allow_redirects=False, headers=headers)
-    if response.status_code == 200:
-        data = response.json()
-        return data["data"]["subscribers"]
-    else:
+    """A function that returns the number of subscribers."""
+    url = f'https://www.reddit.com/r/{subreddit}/about.json'
+    custom_header = {'User-Agent': 'myreddit_script'}
+    response = requests.get(url, allow_redirects=False, headers=custom_header)
+    if response.status_code == 404:
         return 0
+    elif response.status_code == 200:
+        result = response.json()
+        data = result.get('data')
+        count = data.get('subscribers')
+        if count is None:
+            return 0
+        return count
