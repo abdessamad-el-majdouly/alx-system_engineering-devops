@@ -1,35 +1,40 @@
 #!/usr/bin/python3
-"""function that queries Reddit API n prints titles of first 10 hot posts"""
+"""Module that consumes the Reddit API and prints the titles of the first
+10 hot posts listed for a given subreddit."""
 import requests
 
 
 def top_ten(subreddit):
+    """Queries the Reddit API and prints the titles of the first 10 hot
+    posts listed for a given subreddit.
+
+    If not a valid subreddit, print None.
+    Invalid subreddits may return a redirect to search results. Ensure
+    that you are not following redirects.
+
+    Args:
+        subreddit (str): subreddit
+
+    Returns:
+        str: titles of the first 10 hot posts
     """
-    Prints the titles of the first 10 hot posts for a given subreddit.
-    If not a valid subreddit, prints None.
-    """
-    url = f'https://www.reddit.com/r/{subreddit}/hot.json?limit=10'
-    headers = {'User-Agent': 'custom-user-agent'}
-
-    try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-        if response.status_code == 200:
-            data = response.json().get('data', {}).get('children', [])
-            if data:
-                for post in data:
-                    print(post.get('data', {}).get('title'))
-            else:
-                print("No posts found.")
-        else:
-            print(None)
-    except Exception as e:
-        print(None)
-
-
-if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
+    base_url = 'https://www.reddit.com'
+    sort = 'top'
+    limit = 10
+    url = '{}/r/{}/.json?sort={}&limit={}'.format(
+        base_url, subreddit, sort, limit)
+    headers = {
+        'User-Agent':
+        'Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.2.3) \
+        Gecko/20100401 Firefox/3.6.3 (FM Scene 4.6.1)'
+    }
+    response = requests.get(
+        url,
+        headers=headers,
+        allow_redirects=False
+    )
+    if response.status_code == 200:
+        for post in response.json()['data']['children'][0:10]:
+            print(post['data']['title'])
     else:
-        top_ten(sys.argv[1])
+        print(None)
