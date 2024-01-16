@@ -1,34 +1,35 @@
 #!/usr/bin/python3
-"""
-0-subs function queries Reddit API and returns the number of subscribers
-"""
+"""Module that consumes the Reddit API and returns the number of subscribers"""
 import requests
 
 
 def number_of_subscribers(subreddit):
+    """Queries the Reddit API and returns the number of subscribers (not
+    active users, total subscribers) for a given subreddit.
+
+    If not a valid subreddit, return 0.
+    Invalid subreddits may return a redirect to search results. Ensure that
+    you are not following redirects.
+
+    Args:
+        subreddit (str): subreddit
+
+    Returns:
+        int: number of subscribers
     """
-    Returns the number of subscribers for a given subreddit.
-    If not a valid subreddit, returns 0.
-    """
-    url = 'https://www.reddit.com/r/{}/about.json'.format(subreddit)
-    headers = {'User-Agent': 'custom-user-agent'}
+    base_url = 'https://www.reddit.com/r/'
 
-    try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-        if response.status_code == 200:
-            data = response.json().get('data')
-            if data:
-                return data.get('subscribers', 0)
-        return 0
-    except Exception as e:
-        return 0
-
-
-if __name__ == '__main__':
-    import sys
-
-    if len(sys.argv) < 2:
-        print("Please pass an argument for the subreddit to search.")
-    else:
-        subscribers_count = number_of_subscribers(sys.argv[1])
-        print("{:d}".format(subscribers_count))
+    url = '{}{}/about.json'.format(base_url, subreddit)
+    headers = {
+        'User-Agent':
+        'Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.2.3) \
+        Gecko/20100401 Firefox/3.6.3 (FM Scene 4.6.1)'
+    }
+    results = requests.get(
+        url,
+        headers=headers,
+        allow_redirects=False
+    )
+    if results.status_code == 200:
+        return results.json()['data']['subscribers']
+    return 0
