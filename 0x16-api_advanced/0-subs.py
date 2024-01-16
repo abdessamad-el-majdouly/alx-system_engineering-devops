@@ -1,35 +1,20 @@
 #!/usr/bin/python3
-"""Module that consumes the Reddit API and returns the number of subscribers"""
+"""A script that queries reddit Api"""
+
 import requests
 
 
 def number_of_subscribers(subreddit):
-    """Queries the Reddit API and returns the number of subscribers (not
-    active users, total subscribers) for a given subreddit.
-
-    If not a valid subreddit, return 0.
-    Invalid subreddits may return a redirect to search results. Ensure that
-    you are not following redirects.
-
-    Args:
-        subreddit (str): subreddit
-
-    Returns:
-        int: number of subscribers
-    """
-    base_url = 'https://www.reddit.com/r/'
-
-    url = '{}{}/about.json'.format(base_url, subreddit)
-    headers = {
-        'User-Agent':
-        'Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.2.3) \
-        Gecko/20100401 Firefox/3.6.3 (FM Scene 4.6.1)'
-    }
-    results = requests.get(
-        url,
-        headers=headers,
-        allow_redirects=False
-    )
-    if results.status_code == 200:
-        return results.json()['data']['subscribers']
-    return 0
+    """A function that returns the number of subscribers."""
+    url = f'https://www.reddit.com/r/{subreddit}/about.json'
+    custom_header = {'User-Agent': 'myreddit_script'}
+    response = requests.get(url, allow_redirects=False, headers=custom_header)
+    if response.status_code == 404:
+        return 0
+    elif response.status_code == 200:
+        result = response.json()
+        data = result.get('data')
+        count = data.get('subscribers')
+        if count is None:
+            return 0
+        return count
