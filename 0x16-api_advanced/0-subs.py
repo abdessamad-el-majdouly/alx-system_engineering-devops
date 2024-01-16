@@ -1,20 +1,17 @@
 #!/usr/bin/python3
 """
-0. How many Subs?
+Contains the number_of_subscribers function
 """
+
 import requests
 
 
 def number_of_subscribers(subreddit):
-    """
-    Returns the number of subscribers in a
-    Subreddit
-    If the subreddit is not valid returns 0
-    """
-    headers = {'User-Agent': 'About Page : SubscriberCount /Reddit'}
-    url = "https://www.reddit.com/r/{}/about.json".format(subreddit)
-    response = requests.get(url, headers=headers)
-    if 'application/json' in \
-       response.headers.get('content-type', ''):
-        return response.json()['data'].get("subscribers", 0)
-    return 0
+    """returns the number of subscribers for a given subreddit"""
+    if subreddit is None or type(subreddit) is not str:
+        return 0
+    r = requests.get('http://www.reddit.com/r/{}/about.json'.format(subreddit),
+                     headers={'User-Agent': '0x16-api_advanced:project:\
+v1.0.0 (by /u/firdaus_cartoon_jr)'}).json()
+    subs = r.get("data", {}).get("subscribers", 0)
+    return subs
